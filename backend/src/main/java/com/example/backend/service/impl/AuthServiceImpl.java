@@ -99,24 +99,33 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean validateCaptcha(String captcha) {
         if (captcha == null || captcha.isEmpty()) {
-            return false;
+            throw new RuntimeException("验证码不能为空");
         }
         
         String[] parts = captcha.split(":");
         if (parts.length != 2) {
-            return false;
+            throw new RuntimeException("验证码格式错误");
         }
         
         String key = parts[0];
         String expectedCaptcha = parts[1];
         
+        if (key == null || key.isEmpty()) {
+            throw new RuntimeException("验证码 key 为空");
+        }
+        
         String storedCaptcha = captchaStore.get(key);
         if (storedCaptcha == null) {
-            return false;
+            throw new RuntimeException("验证码已过期或不存在");
         }
         
         captchaStore.remove(key);
-        return storedCaptcha.equalsIgnoreCase(expectedCaptcha);
+        
+        if (!storedCaptcha.equalsIgnoreCase(expectedCaptcha)) {
+            throw new RuntimeException("验证码错误");
+        }
+        
+        return true;
     }
 
     private String generateRandomCaptcha() {

@@ -228,7 +228,7 @@ const toggleSidebarSetting = () => {
                   <Settings class="w-4 h-4 mr-2" />
                   {{ t('layout.accountSettings') }}
                 </el-dropdown-item>
-                <el-dropdown-divider></el-dropdown-divider>
+                <el-divider></el-divider>
                 <el-dropdown-item command="logout" class="text-red-500">
                   <LogOut class="w-4 h-4 mr-2" />
                   {{ t('layout.logout') }}
@@ -259,7 +259,7 @@ const toggleSidebarSetting = () => {
             <el-input v-model="settings.systemName" :placeholder="t('settings.enterSystemName')" />
           </el-form-item>
           <el-form-item :label="t('settings.systemDesc')">
-            <el-textarea v-model="settings.systemDesc" :placeholder="t('settings.enterSystemDesc')" rows="3" />
+            <el-input v-model="settings.systemDesc" :placeholder="t('settings.enterSystemDesc')" type="textarea" :rows="3" />
           </el-form-item>
           <el-form-item :label="t('settings.defaultLanguage')">
             <el-select v-model="settings.language">

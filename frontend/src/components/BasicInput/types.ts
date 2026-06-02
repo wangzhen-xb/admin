@@ -1,6 +1,6 @@
 import type { InputProps } from 'element-plus'
 
-export interface BasicInputProps extends Partial<InputProps> {
+export interface BasicInputProps extends /* @vue-ignore */ Partial<InputProps> {
   modelValue?: any
   placeholder?: string
   disabled?: boolean

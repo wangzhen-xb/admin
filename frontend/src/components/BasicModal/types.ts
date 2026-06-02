@@ -1,6 +1,6 @@
 import type { ModalProps } from 'element-plus'
 
-export interface BasicModalProps extends Partial<ModalProps> {
+export interface BasicModalProps extends /* @vue-ignore */ Partial<ModalProps> {
   visible: boolean
   title?: string
   width?: string | number

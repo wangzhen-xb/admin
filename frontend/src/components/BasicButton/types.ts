@@ -4,7 +4,7 @@ export type ButtonType = 'primary' | 'success' | 'warning' | 'danger' | 'info' |
 
 export type ButtonSize = 'large' | 'default' | 'small'
 
-export interface BasicButtonProps extends Partial<ButtonProps> {
+export interface BasicButtonProps extends /* @vue-ignore */ Partial<ButtonProps> {
   type?: ButtonType
   size?: ButtonSize
   loading?: boolean

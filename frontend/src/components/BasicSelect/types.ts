@@ -6,7 +6,7 @@ export interface SelectOption {
   disabled?: boolean
 }
 
-export interface BasicSelectProps extends Partial<SelectProps> {
+export interface BasicSelectProps extends /* @vue-ignore */ Partial<SelectProps> {
   modelValue?: any
   placeholder?: string
   disabled?: boolean

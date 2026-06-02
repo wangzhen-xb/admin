@@ -5,12 +5,9 @@ import axios, {
   type AxiosError
 } from 'axios'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
 import { ApiResponse, ApiCode } from '../types/api'
-import { useUserStore } from '../stores/user'
 import { refreshToken } from '../api/auth'
-
-const router = useRouter()
+import router from '../router'
 
 const service: AxiosInstance = axios.create({
   baseURL: '/api',
@@ -34,8 +31,7 @@ const onRefreshToken = (token: string) => {
 
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const userStore = useUserStore()
-    const token = userStore.accessToken
+    const token = localStorage.getItem('accessToken')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -60,7 +56,6 @@ service.interceptors.response.use(
   },
   async (error: AxiosError) => {
     console.error('Response error:', error)
-    const userStore = useUserStore()
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
     if (error.response) {
@@ -74,11 +69,13 @@ service.interceptors.response.use(
             if (!isRefreshing) {
               isRefreshing = true
               try {
-                const refreshTokenRes = await refreshToken(userStore.refreshToken)
+                const refreshTokenVal = localStorage.getItem('refreshToken')
+                const refreshTokenRes = await refreshToken(refreshTokenVal || '')
                 const newAccessToken = refreshTokenRes.data.accessToken
                 const newRefreshToken = refreshTokenRes.data.refreshToken
                 
-                userStore.setToken(newAccessToken, newRefreshToken)
+                localStorage.setItem('accessToken', newAccessToken)
+                localStorage.setItem('refreshToken', newRefreshToken)
                 
                 originalRequest.headers = originalRequest.headers || {}
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
@@ -88,7 +85,9 @@ service.interceptors.response.use(
                 return service(originalRequest)
               } catch (refreshError) {
                 ElMessage.warning('登录已过期，请重新登录')
-                userStore.logout()
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+                localStorage.removeItem('userInfo')
                 router.push('/login')
                 return Promise.reject(refreshError)
               } finally {

@@ -7,7 +7,7 @@ import { login, getCaptcha } from '../api/auth'
 
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '../stores/user'
-import { User, Lock, RefreshCw, Eye, EyeOff, Shield, QrCode, Smartphone, MessageCircle, Github, Globe } from 'lucide-vue-next'
+import { User, Lock, RefreshCw, Eye, EyeOff, Shield, QrCode, Smartphone, MessageCircle, GitBranch, Globe } from 'lucide-vue-next'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -277,7 +277,7 @@ onMounted(() => {
                 <Globe class="w-5 h-5 text-green-500" />
               </button>
               <button class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
-                <Github class="w-5 h-5 text-gray-700" />
+                <GitBranch class="w-5 h-5 text-gray-700" />
               </button>
               <button class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-colors">
                 <MessageCircle class="w-5 h-5 text-blue-500" />

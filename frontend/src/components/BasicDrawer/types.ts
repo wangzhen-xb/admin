@@ -1,6 +1,6 @@
 import type { DrawerProps } from 'element-plus'
 
-export interface BasicDrawerProps extends Partial<DrawerProps> {
+export interface BasicDrawerProps extends /* @vue-ignore */ Partial<DrawerProps> {
   visible: boolean
   title?: string
   width?: string | number
