@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/user'
 import { ElCard, ElStatistic, ElAvatar, ElRow, ElCol, ElBadge, ElDropdown, ElDropdownMenu, ElDropdownItem, ElProgress } from 'element-plus'
-import { Users, Shield, FolderOpen, Building2, Home, BarChart3, Settings, User, Github, Vue, Html5, Code2, React, Js, MessageSquare, Bell, Mail, FileText, HelpCircle, LogOut, ChevronRight, Calendar, TrendingUp, CheckCircle2, AlertCircle } from 'lucide-vue-next'
+import { Users, Shield, FolderOpen, Building2, Home, BarChart3, Settings, User, Github, Vue, Layout, Code2, React, Js, MessageSquare, Bell, Mail, FileText, HelpCircle, LogOut, ChevronRight, Calendar, TrendingUp, CheckCircle2, AlertCircle } from 'lucide-vue-next'
 
 const { t } = useI18n()
 const userStore = useUserStore()
@@ -32,7 +32,7 @@ const stats = ref([
 const projects = ref([
   { name: 'Github', icon: Github, desc: '不要等待机会，而要创造机会。', date: '2021-04-01', status: '开发组' },
   { name: 'Vue', icon: Vue, desc: '现在的你决定将来的你。', date: '2021-04-01', status: '算法组', color: 'green' },
-  { name: 'Html5', icon: Html5, desc: '没有什么比努力更重要。', date: '2021-04-01', status: '运维组', color: 'orange' },
+  { name: 'Html5', icon: Layout, desc: '没有什么比努力更重要。', date: '2021-04-01', status: '运维组', color: 'orange' },
   { name: 'Angular', icon: Code2, desc: '热情和欲望可以突破一切难关。', date: '2021-04-01', status: 'UI组', color: 'red' },
   { name: 'React', icon: React, desc: '健康的身体是实现目标的基石。', date: '2021-04-01', status: '技术组', color: 'cyan' },
   { name: 'Js', icon: Js, desc: '路是走出来的，而不是空想出来的。', date: '2021-04-01', status: '架构组', color: 'yellow' }
