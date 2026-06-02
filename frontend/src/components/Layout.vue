@@ -17,7 +17,9 @@ import {
   FolderOpen,
   Building2,
   Bell,
-  User
+  User,
+  BookOpen,
+  Tag
 } from 'lucide-vue-next'
 import { useUserStore } from '../stores/user'
 import { useSystemStore } from '../stores/system'
@@ -51,6 +53,7 @@ const menuItems = [
   { path: '/system/roles', icon: Shield, label: 'layout.roles' },
   { path: '/system/menus', icon: FolderOpen, label: 'layout.menus' },
   { path: '/system/depts', icon: Building2, label: 'layout.depts' },
+  { path: '/system/dict-types', icon: BookOpen, label: 'layout.dict' },
   { path: '/system/announcements', icon: Bell, label: 'layout.announcements' }
 ]
 

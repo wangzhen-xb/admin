@@ -45,6 +45,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../views/system/Announcements.vue')
       },
       {
+        path: '/system/dict-types',
+        name: 'DictTypes',
+        component: () => import('../views/system/DictTypes.vue')
+      },
+      {
+        path: '/system/dict-items',
+        name: 'DictItems',
+        component: () => import('../views/system/DictItems.vue')
+      },
+      {
         path: '/settings',
         name: 'Settings',
         component: () => import('../views/Settings.vue')

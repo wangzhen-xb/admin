@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { ElTable, ElTableColumn, ElPagination } from 'element-plus'
 import type { BasicTableProps, BasicTableEmits, BasicTableInstance } from './types'
-import type { TableColumnCtx } from 'element-plus'
+import type { TableColumnCtx, TableInstance } from 'element-plus'
 
 const props = withDefaults(defineProps<BasicTableProps>(), {
   bordered: true,
@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<BasicTableProps>(), {
 
 const emit = defineEmits<BasicTableEmits>()
 
-const tableRef = ref<InstanceType<typeof ElTable> | null>(null)
+const tableRef = ref<TableInstance | null>(null)
 
 const currentPage = ref(1)
 const pageSize = ref(10)

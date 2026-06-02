@@ -30,6 +30,7 @@ const messages = {
       menus: '菜单管理',
       depts: '部门管理',
       announcements: '公告管理',
+      dict: '字典管理',
       settings: '系统设置',
       logout: '退出登录',
       profile: '个人中心',
@@ -79,6 +80,7 @@ const messages = {
       yes: '是',
       no: '否',
       none: '无',
+      back: '返回',
       success: '成功',
       error: '错误',
       warning: '警告',
@@ -169,6 +171,18 @@ const messages = {
         enterTitle: '请输入公告标题',
         enterContent: '请输入公告内容',
         selectType: '请选择公告类型'
+      },
+      dict: {
+        dictType: '字典类型',
+        dictItem: '字典项',
+        dictTypeDescription: '管理系统字典类型信息',
+        dictItemDescription: '管理系统字典项信息',
+        dictName: '字典名称',
+        dictCode: '字典编码',
+        itemValue: '字典值',
+        itemLabel: '字典标签',
+        selectDictType: '请选择字典类型',
+        noDictItem: '暂无字典项数据'
       }
     },
     dashboard: {
@@ -226,6 +240,7 @@ const messages = {
       menus: 'Menus',
       depts: 'Departments',
       announcements: 'Announcements',
+      dict: 'Dictionary',
       settings: 'Settings',
       logout: 'Logout',
       profile: 'Profile',
@@ -275,6 +290,7 @@ const messages = {
       yes: 'Yes',
       no: 'No',
       none: 'None',
+      back: 'Back',
       success: 'Success',
       error: 'Error',
       warning: 'Warning',
@@ -365,6 +381,18 @@ const messages = {
         enterTitle: 'Enter announcement title',
         enterContent: 'Enter announcement content',
         selectType: 'Select type'
+      },
+      dict: {
+        dictType: 'Dict Types',
+        dictItem: 'Dict Items',
+        dictTypeDescription: 'Manage system dictionary types',
+        dictItemDescription: 'Manage system dictionary items',
+        dictName: 'Dict Name',
+        dictCode: 'Dict Code',
+        itemValue: 'Item Value',
+        itemLabel: 'Item Label',
+        selectDictType: 'Select dict type',
+        noDictItem: 'No dict items'
       }
     },
     dashboard: {
