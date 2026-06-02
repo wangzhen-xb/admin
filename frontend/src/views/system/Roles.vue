@@ -4,7 +4,7 @@ import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { useRoleApi, type RoleInfo, type RoleCreateRequest, type RoleUpdateRequest } from '../../api/role'
 import { Plus } from 'lucide-vue-next'
-import { BasicForm, BasicTable } from '../../components'
+import { BasicForm, BasicTable, BasicModal } from '../../components'
 import type { FormItem, TableColumn, BasicFormInstance } from '@/components/types'
 
 const { t } = useI18n()
@@ -216,10 +216,12 @@ onMounted(() => {
       </div>
     </el-card>
 
-    <el-dialog
+    <BasicModal
+      :visible="showAddDialog"
       :title="form.roleId ? t('common.edit') : t('common.add')"
-      v-model="showAddDialog"
       width="450px"
+      @update:visible="(val) => showAddDialog = val"
+      @confirm="submitForm"
     >
       <BasicForm
         ref="formRef"
@@ -228,11 +230,7 @@ onMounted(() => {
         :label-width="100"
         layout="vertical"
       />
-      <template #footer>
-        <el-button @click="showAddDialog = false">{{ t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="submitForm">{{ t('common.confirm') }}</el-button>
-      </template>
-    </el-dialog>
+    </BasicModal>
   </div>
 </template>
 

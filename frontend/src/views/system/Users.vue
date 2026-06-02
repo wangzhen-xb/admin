@@ -6,7 +6,7 @@ import { Plus, Edit, Trash2, Eye, Search, RefreshCw } from 'lucide-vue-next'
 import { useUserApi } from '../../api/user'
 import { useDeptApi } from '../../api/dept'
 import type { UserInfo } from '../../api/auth'
-import { BasicForm, BasicTable } from '../../components'
+import { BasicForm, BasicTable, BasicModal } from '../../components'
 import type { FormItem, TableColumn } from '@/components/types'
 
 const { t } = useI18n()
@@ -329,18 +329,20 @@ onMounted(async () => {
     </div>
   </el-card>
 
-  <el-dialog :title="dialogTitle" v-model="dialogVisible" width="500px">
-    <BasicForm
-      ref="formRef"
-      :model="form"
-      :schema="formSchema"
-      :label-width="100"
-      layout="vertical"
-      @submit="handleSave"
-    />
-    <template #footer>
-      <el-button @click="dialogVisible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleSave">{{ t('common.save') }}</el-button>
-    </template>
-  </el-dialog>
+  <BasicModal
+      :visible="dialogVisible"
+      :title="dialogTitle"
+      width="500px"
+      @update:visible="(val) => dialogVisible = val"
+      @confirm="handleSave"
+    >
+      <BasicForm
+        ref="formRef"
+        :model="form"
+        :schema="formSchema"
+        :label-width="100"
+        layout="vertical"
+        @submit="handleSave"
+      />
+    </BasicModal>
 </template>
