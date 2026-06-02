@@ -1,265 +1,229 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ElCarousel, ElCarouselItem, ElCard, ElButton, ElStatistic, ElDescriptions, ElAvatar, ElRow, ElCol } from 'element-plus'
-import { Users, Shield, FolderOpen, Building2, Clock, Activity, Server, Volume2, ChevronLeft, ChevronRight } from 'lucide-vue-next'
-import { getStats, getRecentUsers, getSystemInfo, getActivityLog, type DashboardStats, type RecentUser, type SystemInfoItem, type ActivityLogItem } from '../api/dashboard'
-import { getActiveAnnouncements, type AnnouncementInfo } from '../api/announcement'
+import { useUserStore } from '../stores/user'
+import { ElCard, ElStatistic, ElAvatar, ElRow, ElCol, ElBadge, ElDropdown, ElDropdownMenu, ElDropdownItem, ElProgress } from 'element-plus'
+import { Users, Shield, FolderOpen, Building2, Home, BarChart3, Settings, User, Github, Vue, Html5, Angular, React, Js, MessageSquare, Bell, Mail, FileText, HelpCircle, LogOut, ChevronRight, Calendar, TrendingUp, CheckCircle2, AlertCircle } from 'lucide-vue-next'
 
 const { t } = useI18n()
-
-const announcements = ref<AnnouncementInfo[]>([])
-const carouselRef = ref<InstanceType<typeof ElCarousel> | null>(null)
-const currentIndex = ref(0)
-
-const stats = ref<DashboardStats>({
-  totalUsers: 0,
-  totalRoles: 0,
-  totalMenus: 0,
-  totalDepts: 0
-})
-
-const recentUsers = ref<RecentUser[]>([])
-const systemInfo = ref<SystemInfoItem[]>([])
-const activityList = ref<ActivityLogItem[]>([])
+const userStore = useUserStore()
 
 const currentTime = ref(new Date())
-
 const greeting = computed(() => {
   const hour = currentTime.value.getHours()
-  if (hour < 6) return 'dashboard.night'
-  if (hour < 12) return 'dashboard.morning'
-  if (hour < 18) return 'dashboard.afternoon'
-  return 'dashboard.evening'
+  if (hour < 6) return '夜深了'
+  if (hour < 12) return '早安'
+  if (hour < 18) return '下午好'
+  return '晚上好'
 })
 
-const statItems = computed(() => [
-  { label: 'dashboard.totalUsers', value: stats.value.totalUsers, icon: Users, color: 'blue', trend: '+12.5%' },
-  { label: 'dashboard.totalRoles', value: stats.value.totalRoles, icon: Shield, color: 'green', trend: '+5.3%' },
-  { label: 'dashboard.totalMenus', value: stats.value.totalMenus, icon: FolderOpen, color: 'purple', trend: '+8.1%' },
-  { label: 'dashboard.totalDepts', value: stats.value.totalDepts, icon: Building2, color: 'orange', trend: '+3.2%' }
+const weatherInfo = ref({
+  temp: '26°C',
+  condition: '晴'
+})
+
+const stats = ref([
+  { label: '总用户', value: 1234, icon: Users, color: 'blue', trend: '+12.5%' },
+  { label: '角色数', value: 24, icon: Shield, color: 'green', trend: '+5.3%' },
+  { label: '菜单数', value: 156, icon: FolderOpen, color: 'purple', trend: '+8.1%' },
+  { label: '部门数', value: 12, icon: Building2, color: 'orange', trend: '+3.2%' }
 ])
 
-const actionButtons = ref([
-  { icon: Users, type: 'primary', label: 'dashboard.manageUsers' },
-  { icon: Shield, type: 'success', label: 'dashboard.manageRoles' },
-  { icon: FolderOpen, type: 'warning', label: 'dashboard.manageMenus' },
-  { icon: Building2, type: 'danger', label: 'dashboard.manageDepts' }
+const projects = ref([
+  { name: 'Github', icon: Github, desc: '不要等待机会，而要创造机会。', date: '2021-04-01', status: '开发组' },
+  { name: 'Vue', icon: Vue, desc: '现在的你决定将来的你。', date: '2021-04-01', status: '算法组', color: 'green' },
+  { name: 'Html5', icon: Html5, desc: '没有什么比努力更重要。', date: '2021-04-01', status: '运维组', color: 'orange' },
+  { name: 'Angular', icon: Angular, desc: '热情和欲望可以突破一切难关。', date: '2021-04-01', status: 'UI组', color: 'red' },
+  { name: 'React', icon: React, desc: '健康的身体是实现目标的基石。', date: '2021-04-01', status: '技术组', color: 'cyan' },
+  { name: 'Js', icon: Js, desc: '路是走出来的，而不是空想出来的。', date: '2021-04-01', status: '架构组', color: 'yellow' }
 ])
 
-const prevAnnouncement = () => {
-  carouselRef.value?.prev()
-}
+const quickNavs = ref([
+  { name: '首页', icon: Home, path: '/' },
+  { name: '仪表盘', icon: BarChart3, path: '/dashboard' },
+  { name: '系统管理', icon: Settings, path: '/system/users' },
+  { name: '权限管理', icon: Shield, path: '/system/roles' }
+])
 
-const nextAnnouncement = () => {
-  carouselRef.value?.next()
-}
+const recentActivities = ref([
+  { user: '威廉', action: '创建了项目', target: 'Vue', time: '刚刚', avatar: 'W' },
+  { user: '艾文', action: '关注了', target: '威廉', time: '1个小时前', avatar: 'A' },
+  { user: '克里斯', action: '发布了动态', target: '', time: '1天前', avatar: 'K' }
+])
 
-const onCarouselChange = (index: number) => {
-  currentIndex.value = index
-}
+const pendingTasks = ref([
+  { title: '审查前端代码提交', time: '2024-07-11 09:00', completed: false, progress: 60 },
+  { title: '系统性能优化', time: '2024-07-11 10:00', completed: false, progress: 40 },
+  { title: '安全检查', time: '2024-07-11 14:00', completed: true, progress: 100 },
+  { title: '新功能发布', time: '2024-07-12 09:00', completed: false, progress: 20 }
+])
+
+const userInfo = computed(() => userStore.userInfo)
 
 const colorClasses: Record<string, string> = {
   blue: 'bg-blue-500',
   green: 'bg-green-500',
   purple: 'bg-purple-500',
-  orange: 'bg-orange-500'
+  orange: 'bg-orange-500',
+  red: 'bg-red-500',
+  cyan: 'bg-cyan-500',
+  yellow: 'bg-yellow-500'
 }
 
 const iconBgClasses: Record<string, string> = {
-  green: 'bg-green-100 text-green-600',
   blue: 'bg-blue-100 text-blue-600',
-  orange: 'bg-orange-100 text-orange-600'
-}
-
-const fetchData = async () => {
-  try {
-    const [statsRes, usersRes, infoRes, activityRes, announcementRes] = await Promise.all([
-      getStats(),
-      getRecentUsers(),
-      getSystemInfo(),
-      getActivityLog(),
-      getActiveAnnouncements()
-    ])
-
-    if (statsRes.code === 200 && statsRes.data) {
-      stats.value = statsRes.data
-    }
-
-    if (usersRes.code === 200 && usersRes.data) {
-      recentUsers.value = usersRes.data
-    }
-
-    if (infoRes.code === 200 && infoRes.data) {
-      systemInfo.value = infoRes.data
-    }
-
-    if (activityRes.code === 200 && activityRes.data) {
-      activityList.value = activityRes.data
-    }
-
-    if (announcementRes.code === 200 && announcementRes.data) {
-      announcements.value = announcementRes.data
-    }
-  } catch (error) {
-    console.error('Failed to fetch dashboard data:', error)
-  }
+  green: 'bg-green-100 text-green-600',
+  purple: 'bg-purple-100 text-purple-600',
+  orange: 'bg-orange-100 text-orange-600',
+  red: 'bg-red-100 text-red-600',
+  cyan: 'bg-cyan-100 text-cyan-600',
+  yellow: 'bg-yellow-100 text-yellow-600'
 }
 
 onMounted(() => {
   setInterval(() => {
     currentTime.value = new Date()
   }, 1000)
-  fetchData()
 })
 </script>
 
 <template>
-  <div class="p-6" :style="{ backgroundColor: 'var(--el-bg-color)' }">
-    <el-row class="mb-6">
-      <el-col :span="12">
-        <h1 class="text-2xl font-bold" :style="{ color: 'var(--el-text-color-primary)' }">{{ t('dashboard.title') }}</h1>
-        <p class="mt-1" :style="{ color: 'var(--el-text-color-secondary)' }">{{ t(greeting) }}, {{ t('dashboard.welcome') }}</p>
-      </el-col>
-      <el-col :span="12" class="text-right">
-        <div class="text-3xl font-mono" :style="{ color: 'var(--el-text-color-secondary)' }">{{ currentTime.toLocaleTimeString() }}</div>
-        <div class="text-sm" :style="{ color: 'var(--el-text-color-placeholder)' }">{{ currentTime.toLocaleDateString() }}</div>
-      </el-col>
-    </el-row>
-
-    <el-card v-if="announcements.length > 0" class="mb-6" body-style="padding: 0;">
-      <div class="bg-gradient-to-r from-blue-600 to-purple-600">
-        <el-row align="middle">
-          <el-col :span="3">
-            <div class="px-5 py-4 flex items-center gap-3">
-              <Volume2 class="w-5 h-5 text-white animate-pulse" />
-              <span class="text-white font-medium text-sm">{{ t('page.announcements.title') }}</span>
+  <div class="p-6" :style="{ backgroundColor: 'var(--el-bg-color-page)' }">
+    <div class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl p-6 mb-6 shadow-lg">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
+              <User class="w-7 h-7 text-white" />
             </div>
-          </el-col>
-          <el-col :span="18">
-            <el-carousel
-              ref="carouselRef"
-              direction="vertical"
-              :interval="5000"
-              height="48px"
-              indicator-position="none"
-              class="!bg-transparent"
-              @change="onCarouselChange"
-            >
-              <el-carousel-item
-                v-for="announcement in announcements"
-                :key="announcement.id"
-                class="!bg-transparent !h-full flex items-center"
-              >
-                <span class="text-white text-sm font-medium">{{ announcement.title }}：</span>
-                <span class="text-white text-sm">{{ announcement.content }}</span>
-                <span class="text-white/60 text-xs ml-4">{{ announcement.publishTime }}</span>
-              </el-carousel-item>
-            </el-carousel>
-          </el-col>
-          <el-col :span="3" class="flex items-center justify-end gap-2 px-4">
-            <el-button @click="prevAnnouncement" text circle>
-              <ChevronLeft class="w-4 h-4 text-white" />
-            </el-button>
-            <span class="text-white text-sm">{{ currentIndex + 1 }} / {{ announcements.length }}</span>
-            <el-button @click="nextAnnouncement" text circle>
-              <ChevronRight class="w-4 h-4 text-white" />
-            </el-button>
-          </el-col>
-        </el-row>
+            <div>
+              <h2 class="text-2xl font-bold text-white">{{ greeting }}，{{ userInfo.name || 'Admin' }}</h2>
+              <p class="text-white/80 text-sm">开始您一天的工作吧！</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 mt-4">
+            <span class="text-white/60 text-sm">{{ currentTime.toLocaleDateString('zh-CN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}</span>
+            <span class="text-white/40">|</span>
+            <span class="text-white/60 text-sm flex items-center gap-1">
+              <Calendar class="w-4 h-4" />
+              {{ weatherInfo.condition }}，{{ weatherInfo.temp }}
+            </span>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-6xl">👋</div>
+        </div>
       </div>
-    </el-card>
+    </div>
 
     <el-row :gutter="20" class="mb-6">
-      <el-col :span="6" v-for="stat in statItems" :key="stat.label">
-        <el-card>
-          <div class="flex items-center justify-between mb-4">
-            <div :class="[colorClasses[stat.color], 'p-2.5 rounded-lg']">
+      <el-col :span="6" v-for="stat in stats" :key="stat.label">
+        <el-card class="hover:shadow-lg transition-shadow duration-300">
+          <div class="flex items-center justify-between mb-3">
+            <div :class="[colorClasses[stat.color], 'w-10 h-10 rounded-xl flex items-center justify-center']">
               <component :is="stat.icon" class="w-5 h-5 text-white" />
             </div>
-            <span v-if="stat.trend" class="text-green-500 text-xs font-medium">{{ stat.trend }}</span>
-          </div>
-          <el-statistic :value="stat.value" :label="t(stat.label)" />
-        </el-card>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="20" class="mb-6">
-      <el-col :span="16">
-        <el-card :header="t('dashboard.recentUsers')">
-          <div class="space-y-3">
-            <div
-              v-for="(user, index) in recentUsers"
-              :key="user.id || index"
-              class="flex items-center justify-between py-2 border-b last:border-0"
-              :style="{ borderColor: 'var(--el-border-color-light)' }"
-            >
-              <div class="flex items-center gap-3">
-                <el-avatar class="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-medium">
-                  {{ user.name.charAt(0) }}
-                </el-avatar>
-                <div>
-                  <div class="text-sm font-medium" :style="{ color: 'var(--el-text-color-primary)' }">{{ user.name }}</div>
-                  <div class="text-xs" :style="{ color: 'var(--el-text-color-secondary)' }">{{ user.role }}</div>
-                </div>
-              </div>
-              <div class="text-xs" :style="{ color: 'var(--el-text-color-placeholder)' }">{{ user.createTime }}</div>
+            <div class="flex items-center gap-1 text-green-500 text-xs">
+              <TrendingUp class="w-3 h-3" />
+              {{ stat.trend }}
             </div>
           </div>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card :header="t('dashboard.systemInfo')">
-          <el-descriptions :column="1" border>
-            <el-descriptions-item
-              v-for="(info, index) in systemInfo"
-              :key="index"
-              :label="info.label"
-            >
-              {{ info.value }}
-            </el-descriptions-item>
-          </el-descriptions>
-          <div class="mt-4 flex items-center gap-3">
-            <Server class="w-5 h-5 text-green-500" />
-            <span class="text-sm text-green-600 font-medium">{{ t('dashboard.serverOnline') }}</span>
-          </div>
+          <div class="text-2xl font-bold text-gray-800">{{ stat.value.toLocaleString() }}</div>
+          <div class="text-sm text-gray-500 mt-1">{{ stat.label }}</div>
         </el-card>
       </el-col>
     </el-row>
 
     <el-row :gutter="20">
-      <el-col :span="12">
-        <el-card :header="t('dashboard.recentActivity')">
+      <el-col :span="16">
+        <el-card class="mb-6" header="项目">
+          <el-row :gutter="16">
+            <el-col :span="8" v-for="project in projects" :key="project.name">
+              <div class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-colors cursor-pointer group">
+                <div class="flex items-center gap-3 mb-3">
+                  <div :class="[iconBgClasses[project.color || 'blue'], 'w-10 h-10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform']">
+                    <component :is="project.icon" class="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div class="font-semibold text-gray-800">{{ project.name }}</div>
+                    <div class="text-xs text-gray-400">{{ project.status }}</div>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-500 mb-3">{{ project.desc }}</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-gray-400">{{ project.date }}</span>
+                  <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+        </el-card>
+
+        <el-card header="最新动态">
           <div class="space-y-4">
-            <div
-              v-for="(activity, index) in activityList"
+            <div 
+              v-for="(activity, index) in recentActivities" 
               :key="index"
-              class="flex items-start gap-3"
+              class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0"
             >
-              <div :class="[iconBgClasses[activity.color], 'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0']">
-                <component :is="activity.icon === 'Activity' ? Activity : activity.icon === 'FolderOpen' ? FolderOpen : Clock" class="w-4 h-4" />
+              <el-avatar class="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-medium">
+                {{ activity.avatar }}
+              </el-avatar>
+              <div class="flex-1">
+                <span class="text-sm font-medium text-gray-800">{{ activity.user }}</span>
+                <span class="text-sm text-gray-500"> {{ activity.action }} </span>
+                <span v-if="activity.target" class="text-sm font-medium text-blue-500">{{ activity.target }}</span>
               </div>
-              <div>
-                <div class="text-sm font-medium" :style="{ color: 'var(--el-text-color-primary)' }">{{ activity.label }}</div>
-                <div class="text-xs" :style="{ color: 'var(--el-text-color-placeholder)' }">{{ activity.user }} - {{ activity.time }}</div>
-              </div>
+              <span class="text-xs text-gray-400">{{ activity.time }}</span>
             </div>
           </div>
         </el-card>
       </el-col>
-      <el-col :span="12">
-        <el-card :header="t('dashboard.quickActions')" class="h-full">
-          <el-row :gutter="12">
-            <el-col :span="12" v-for="(action, index) in actionButtons" :key="index">
-              <el-button 
-                :type="action.type as any" 
-                class="w-full flex flex-col items-center gap-2 py-5 mt-5 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <component :is="action.icon" class="w-8 h-8" />
-                <span class="text-sm font-medium">{{ t(action.label) }}</span>
-              </el-button>
-            </el-col>
-          </el-row>
+
+      <el-col :span="8">
+        <el-card class="mb-6" header="快捷导航">
+          <div class="grid grid-cols-2 gap-3">
+            <div 
+              v-for="nav in quickNavs" 
+              :key="nav.name"
+              class="bg-gray-50 rounded-xl p-4 flex flex-col items-center gap-2 hover:bg-blue-50 hover:border-blue-200 border border-transparent cursor-pointer transition-all group"
+            >
+              <div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:shadow-md transition-shadow">
+                <component :is="nav.icon" class="w-6 h-6 text-gray-600 group-hover:text-blue-500 transition-colors" />
+              </div>
+              <span class="text-sm font-medium text-gray-700">{{ nav.name }}</span>
+            </div>
+          </div>
+        </el-card>
+
+        <el-card header="待办事项">
+          <div class="space-y-4">
+            <div 
+              v-for="(task, index) in pendingTasks" 
+              :key="index"
+              class="bg-gray-50 rounded-lg p-3"
+            >
+              <div class="flex items-start gap-2">
+                <component 
+                  :is="task.completed ? CheckCircle2 : AlertCircle" 
+                  :class="task.completed ? 'w-5 h-5 text-green-500' : 'w-5 h-5 text-gray-400'" 
+                />
+                <div class="flex-1">
+                  <div :class="task.completed ? 'text-sm text-gray-400 line-through' : 'text-sm font-medium text-gray-700'">
+                    {{ task.title }}
+                  </div>
+                  <div class="text-xs text-gray-400 mt-1">{{ task.time }}</div>
+                  <ElProgress 
+                    v-if="!task.completed"
+                    :percentage="task.progress" 
+                    :stroke-width="4" 
+                    class="mt-2"
+                    :show-text="false"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </el-card>
       </el-col>
     </el-row>
