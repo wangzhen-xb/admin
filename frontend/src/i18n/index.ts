@@ -12,6 +12,7 @@ const messages = {
       loading: '登录中...',
       success: '登录成功',
       failed: '登录失败',
+      logoutSuccess: '退出成功',
       placeholder: {
         username: '请输入用户名',
         password: '请输入密码',
@@ -222,6 +223,7 @@ const messages = {
       loading: 'Logging in...',
       success: 'Login successful',
       failed: 'Login failed',
+      logoutSuccess: 'Logout successful',
       placeholder: {
         username: 'Enter username',
         password: 'Enter password',

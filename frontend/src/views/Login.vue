@@ -82,8 +82,7 @@ const handleLogin = async () => {
     userStore.setUserInfo(res.data.user)
     ElMessage.success(t('login.success'))
     router.push('/')
-  } catch (error) {
-    ElMessage.error(t('login.failed'))
+  } catch {
     refreshCaptcha()
   } finally {
     isLoading.value = false

@@ -61,6 +61,9 @@ service.interceptors.response.use(
     if (error.response) {
       const status = error.response.status
 
+      const responseData = error.response.data as ApiResponse
+      const errorMessage = responseData.message || '请求失败'
+
       switch (status) {
         case ApiCode.UNAUTHORIZED:
           if (!originalRequest._retry) {
@@ -105,16 +108,16 @@ service.interceptors.response.use(
           }
           break
         case ApiCode.FORBIDDEN:
-          ElMessage.error('没有权限访问此资源')
+          ElMessage.error(errorMessage || '没有权限访问此资源')
           break
         case ApiCode.NOT_FOUND:
-          ElMessage.error('请求的资源不存在')
+          ElMessage.error(errorMessage || '请求的资源不存在')
           break
         case ApiCode.SERVER_ERROR:
-          ElMessage.error('服务器内部错误')
+          ElMessage.error(errorMessage || '服务器内部错误')
           break
         default:
-          ElMessage.error('请求失败')
+          ElMessage.error(errorMessage || '请求失败')
       }
     } else if (error.request) {
       ElMessage.error('网络请求超时，请检查网络连接')

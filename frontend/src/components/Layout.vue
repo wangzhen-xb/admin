@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   LayoutDashboard,
   Users,
@@ -58,11 +58,23 @@ const menuItems = [
 ]
 
 const handleLogout = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-  userStore.logout()
-  ElMessage.success(t('login.success'))
-  router.push('/login')
+  ElMessageBox.confirm(
+    t('common.confirmLogout'),
+    t('layout.logout'),
+    {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
+      type: 'warning'
+    }
+  ).then(() => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    userStore.logout()
+    ElMessage.success(t('login.logoutSuccess'))
+    router.push('/login')
+  }).catch(() => {
+    ElMessage.info(t('common.cancel'))
+  })
 }
 
 const toggleCollapse = () => {
