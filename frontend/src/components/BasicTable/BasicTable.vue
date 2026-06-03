@@ -150,8 +150,8 @@ defineExpose<BasicTableInstance>({
         :total="(pagination as any)?.total || 0"
         :page-sizes="[10, 20, 50, 100]"
         layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handlePageChange"
+        @update:page-size="handleSizeChange"
+        @update:current-page="handlePageChange"
         v-bind="paginationProps"
       />
     </div>

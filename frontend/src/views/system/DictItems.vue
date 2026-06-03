@@ -239,7 +239,7 @@ onMounted(() => {
   <div class="dict-items-page">
     <div class="page-header">
       <div class="header-info">
-        <el-button type="text" class="back-btn" @click="goBack">
+        <el-button link class="back-btn" @click="goBack">
           <ArrowLeft class="w-4 h-4 mr-1" />
           <span>{{ t('common.back') }}</span>
         </el-button>

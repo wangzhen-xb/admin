@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -10,10 +10,10 @@ spring:
   
   sql:
     init:
-      mode: never
+      mode: always
 
   jpa:
-    defer-datasource-initialization: false
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
     show-sql: true

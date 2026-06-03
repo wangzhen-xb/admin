@@ -137,10 +137,12 @@ const loadUsers = async () => {
       size: size.value,
       ...searchForm.value
     })
-    tableData.value = res.data.list
-    total.value = res.data.total
+    tableData.value = res.data?.list || []
+    total.value = res.data?.total || 0
   } catch (error) {
     ElMessage.error(t('message.fetchFailed'))
+    tableData.value = []
+    total.value = 0
   } finally {
     loading.value = false
   }
@@ -297,35 +299,23 @@ onMounted(async () => {
         <template #action="{ row }">
           <div class="flex items-center gap-2">
             <el-tooltip :content="t('common.view')">
-              <el-button type="text" icon="View">
+              <el-button link icon="View">
                 <Eye class="w-4 h-4" />
               </el-button>
             </el-tooltip>
             <el-tooltip :content="t('common.edit')">
-              <el-button type="text" icon="Edit" @click="openEditDialog(row)">
+              <el-button link icon="Edit" @click="openEditDialog(row)">
                 <Edit class="w-4 h-4" />
               </el-button>
             </el-tooltip>
             <el-tooltip :content="t('common.delete')">
-              <el-button type="text" icon="Delete" @click="handleDelete(row.userId)">
+              <el-button link icon="Delete" @click="handleDelete(row.userId)">
                 <Trash2 class="w-4 h-4" />
               </el-button>
             </el-tooltip>
           </div>
         </template>
       </BasicTable>
-    </div>
-
-    <div class="mt-4 flex items-center justify-end">
-      <el-pagination
-        :current-page="page"
-        :page-size="size"
-        :total="total"
-        :page-sizes="[10, 20, 50, 100]"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handlePageChange"
-      />
     </div>
   </el-card>
 

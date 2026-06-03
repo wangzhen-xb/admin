@@ -56,10 +56,16 @@ public class UserController {
             }
         });
 
+        Map<String, Object> data = new HashMap<>();
+        data.put("list", users);
+        data.put("total", userPage.getTotalElements());
+        data.put("page", userPage.getNumber());
+        data.put("size", userPage.getSize());
+
         Map<String, Object> result = new HashMap<>();
         result.put("code", 200);
         result.put("message", "success");
-        result.put("data", userPage);
+        result.put("data", data);
         return ResponseEntity.ok(result);
     }
 
