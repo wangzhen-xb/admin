@@ -32,23 +32,55 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         
         String token = extractToken(request);
+        String requestUri = request.getRequestURI();
         
-        if (token != null && jwtTokenUtil.validateToken(token) && jwtTokenUtil.isAccessToken(token)) {
-            Long userId = jwtTokenUtil.getUserIdFromToken(token);
-            String username = jwtTokenUtil.getUsernameFromToken(token);
-            
-            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userId,
-                        null,
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
+        if (isPublicEndpoint(requestUri)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
+        if (token == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"code\": 401, \"message\": \"未授权，请登录\"}");
+            return;
+        }
+        
+        if (!jwtTokenUtil.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"code\": 401, \"message\": \"token已过期或无效\"}");
+            return;
+        }
+        
+        if (!jwtTokenUtil.isAccessToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"code\": 401, \"message\": \"无效的access token\"}");
+            return;
+        }
+        
+        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userId,
+                    null,
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+            );
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
         }
         
         filterChain.doFilter(request, response);
+    }
+    
+    private boolean isPublicEndpoint(String uri) {
+        return uri.startsWith("/api/auth/login") 
+            || uri.startsWith("/api/auth/refresh") 
+            || uri.startsWith("/api/auth/captcha") 
+            || uri.startsWith("/h2-console");
     }
 
     private String extractToken(HttpServletRequest request) {

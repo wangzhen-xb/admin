@@ -18,8 +18,8 @@ export interface PaginationParams {
 
 export enum ApiCode {
   SUCCESS = 200,
-  UNAUTHORIZED = 401,
-  FORBIDDEN = 403,
-  NOT_FOUND = 404,
-  SERVER_ERROR = 500
+  UNAUTHORIZED = 401, // 未授权
+  FORBIDDEN = 403, // 没有权限访问此资源
+  NOT_FOUND = 404, // 请求的资源不存在
+  SERVER_ERROR = 500 // 服务器内部错误
 }
