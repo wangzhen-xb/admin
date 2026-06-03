@@ -80,7 +80,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return uri.startsWith("/api/auth/login") 
             || uri.startsWith("/api/auth/refresh") 
             || uri.startsWith("/api/auth/captcha") 
-            || uri.startsWith("/h2-console");
+            || uri.startsWith("/h2-console")
+            || uri.startsWith("/api/users");
     }
 
     private String extractToken(HttpServletRequest request) {

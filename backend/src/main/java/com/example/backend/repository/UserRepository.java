@@ -19,21 +19,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsernameAndUserIdNot(String username, Long userId);
 
-    @Query("SELECT u FROM User u WHERE u.delFlag = '0'")
+    @Query("SELECT u FROM User u WHERE u.delFlag IS NULL OR u.delFlag = '0'")
     List<User> findAllActive();
 
-    @Query("SELECT u FROM User u WHERE u.delFlag = '0'")
+    @Query("SELECT u FROM User u WHERE u.delFlag IS NULL OR u.delFlag = '0'")
     Page<User> findAllActive(Pageable pageable);
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.delFlag = :delFlag")
     long countByDelFlag(String delFlag);
 
-    @Query("SELECT u FROM User u WHERE u.delFlag = '0' AND u.username LIKE %:keyword%")
+    @Query("SELECT u FROM User u WHERE (u.delFlag IS NULL OR u.delFlag = '0') AND u.username LIKE %:keyword%")
     Page<User> findByUsernameContaining(String keyword, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE u.delFlag = '0' AND u.email LIKE %:keyword%")
+    @Query("SELECT u FROM User u WHERE (u.delFlag IS NULL OR u.delFlag = '0') AND u.email LIKE %:keyword%")
     Page<User> findByEmailContaining(String keyword, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE u.delFlag = '0' AND (u.username LIKE %:username% OR u.email LIKE %:email%)")
+    @Query("SELECT u FROM User u WHERE (u.delFlag IS NULL OR u.delFlag = '0') AND (u.username LIKE %:username% OR u.email LIKE %:email%)")
     Page<User> findByUsernameOrEmail(String username, String email, Pageable pageable);
 }

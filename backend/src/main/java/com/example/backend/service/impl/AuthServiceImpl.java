@@ -11,7 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -31,8 +32,8 @@ public class AuthServiceImpl implements AuthService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    @PostConstruct
-    public void init() {
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReady() {
         initAdminUser();
     }
 
@@ -139,15 +140,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void initAdminUser() {
-        if (userRepository.findByUsername("admin").isEmpty()) {
-            User admin = new User();
+        Optional<User> existingOpt = userRepository.findByUsername("admin");
+        User admin;
+        if (existingOpt.isPresent()) {
+            admin = existingOpt.get();
+            admin.setPassword(passwordEncoder.encode("admin123"));
+        } else {
+            admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setEmail("admin@example.com");
             admin.setPhone("13800138000");
             admin.setStatus("0");
             admin.setDelFlag("0");
-            userRepository.save(admin);
         }
+        userRepository.save(admin);
     }
 }
