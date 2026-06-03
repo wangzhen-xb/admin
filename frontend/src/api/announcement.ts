@@ -1,5 +1,5 @@
 import { get, post, put, del } from '../utils/request'
-import type { ApiResponse } from '../types/api'
+import type { ApiResponse, PageResult } from '../types/api'
 
 export interface AnnouncementInfo {
   id: number
@@ -26,8 +26,13 @@ export interface AnnouncementUpdateRequest {
   status?: string
 }
 
-export function getAnnouncements(): Promise<ApiResponse<AnnouncementInfo[]>> {
-  return get('/announcements')
+export interface AnnouncementQueryParams {
+  title?: string
+  page?: number
+  size?: number
+}
+export function getAnnouncements(params?: AnnouncementQueryParams): Promise<ApiResponse<PageResult<AnnouncementInfo>>> {
+  return get(`/announcements`, params)
 }
 
 export function getAnnouncement(id: number): Promise<ApiResponse<AnnouncementInfo>> {
@@ -50,8 +55,8 @@ export function deleteAnnouncement(id: number): Promise<ApiResponse<void>> {
   return del(`/announcements/${id}`)
 }
 
-export function getActiveAnnouncements(): Promise<ApiResponse<AnnouncementInfo[]>> {
-  return get('/announcements/active')
+export function getActiveAnnouncements(page: number, size: number): Promise<ApiResponse<PageResult<AnnouncementInfo>>> {
+  return get('/announcements/active', { params: { page, size } })
 }
 
 export function useAnnouncementApi() {
@@ -60,6 +65,7 @@ export function useAnnouncementApi() {
     getAnnouncement,
     createAnnouncement,
     updateAnnouncement,
-    deleteAnnouncement
+    deleteAnnouncement,
+    getActiveAnnouncements
   }
 }

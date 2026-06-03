@@ -105,7 +105,8 @@ const formSchema = computed<FormItem[]>(() => [{
 ])
 
 const columns = computed<TableColumn[]>(() => [
-  { title: t('page.users.userId'), key: 'id', width: 80 },
+  { title: t('common.number'), key: 'index', type: 'index', width: 60 },
+  { title: t('page.users.userId'), key: 'userId', width: 80 },
   { title: t('page.users.username'), key: 'username' },
   { title: t('page.users.email'), key: 'email' },
   { title: t('page.users.phone'), key: 'phone' },

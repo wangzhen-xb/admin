@@ -130,7 +130,7 @@ service.interceptors.response.use(
 )
 
 export async function get<T = any>(url: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
-  const response = await service.get(url, { params })
+  const response = await service.get(url, {params})
   return response.data
 }
 

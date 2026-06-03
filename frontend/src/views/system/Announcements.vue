@@ -15,6 +15,10 @@ const loading = ref(false)
 const showAddDialog = ref(false)
 const formRef = ref<BasicFormInstance | null>(null)
 const searchForm = ref({ title: '' })
+const page = ref(1)
+const size = ref(10)
+const total = ref(0)
+
 
 const form = ref({
   id: undefined as number | undefined,
@@ -125,9 +129,12 @@ const getTypeName = (type: string) => {
 const fetchAnnouncements = async () => {
   loading.value = true
   try {
-    const res = await announcementApi.getAnnouncements()
-    announcementList.value = res.data || []
+    const res = await announcementApi.getAnnouncements({ title: searchForm.value.title, page: page.value, size: size.value })
+    announcementList.value = res.data.list || []
+    total.value = res.data.total || 0
   } catch (error) {
+    announcementList.value = []
+    total.value = 0
     ElMessage.error(t('message.fetchFailed'))
   } finally {
     loading.value = false
@@ -135,6 +142,8 @@ const fetchAnnouncements = async () => {
 }
 
 const searchAnnouncements = () => {
+  page.value = 1
+  fetchAnnouncements()
 }
 
 const resetSearch = () => {
@@ -233,6 +242,8 @@ onMounted(() => {
           :data="filteredList"
           :columns="columns"
           :loading="loading"
+          :pagination="{ total }"
+
         >
           <template #type="{ row }">
             <el-tag :type="getTypeTagType(row.type)">{{ getTypeName(row.type) }}</el-tag>

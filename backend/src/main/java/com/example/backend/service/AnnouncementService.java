@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Announcement;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public interface AnnouncementService {
     
     void deleteById(Long id);
     
-    List<Announcement> searchByTitle(String title);
+    org.springframework.data.domain.Page<Announcement> searchByTitle(String title, Pageable pageable);
     
-    List<Announcement> findActive();
+    org.springframework.data.domain.Page<Announcement> findActive(Pageable pageable);
 }

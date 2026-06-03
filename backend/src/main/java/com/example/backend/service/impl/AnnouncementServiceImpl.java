@@ -5,6 +5,8 @@ import com.example.backend.repository.AnnouncementRepository;
 import com.example.backend.service.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,12 +56,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public List<Announcement> searchByTitle(String title) {
-        return announcementRepository.findByTitleContainingOrderByCreateTimeDesc(title);
+    public Page<Announcement> searchByTitle(String title, Pageable pageable) {
+        return announcementRepository.findByTitleContainingOrderByCreateTimeDesc(title, pageable);
     }
 
     @Override
-    public List<Announcement> findActive() {
-        return announcementRepository.findByStatusOrderByCreateTimeDesc("0");
+    public Page<Announcement> findActive(Pageable pageable) {
+        return announcementRepository.findByStatusOrderByCreateTimeDesc("0", pageable); 
     }
 }

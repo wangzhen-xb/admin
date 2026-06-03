@@ -4,6 +4,10 @@ import com.example.backend.entity.Announcement;
 import com.example.backend.service.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,21 +28,33 @@ public class AnnouncementController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllAnnouncements(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String title) {
-        
-        Map<String, Object> result = new HashMap<>();
-        List<Announcement> announcements;
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createTime"));
+        Page<Announcement> announcementPage;
+
 
         if (title != null && !title.isEmpty()) {
-            announcements = announcementService.searchByTitle(title);
+            announcementPage = announcementService.searchByTitle(title, pageable);
         } else {
-            announcements = announcementService.findAll();
+            announcementPage = announcementService.findActive(pageable);
         }
+        List<Announcement> announcementsList = announcementPage.getContent();
 
-        result.put("code", 200);
-        result.put("message", "success");
-        result.put("data", announcements);
-        return ResponseEntity.ok(result);
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", announcementsList);
+        result.put("total", announcementPage.getTotalElements());
+        result.put("page", announcementPage.getNumber());
+        result.put("size", announcementPage.getSize());
+
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("code", 200);
+        response.put("data", result);
+        response.put("message", "success");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -112,10 +128,13 @@ public class AnnouncementController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<Map<String, Object>> getActiveAnnouncements() {
+    public ResponseEntity<Map<String, Object>> getActiveAnnouncements(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         Map<String, Object> result = new HashMap<>();
         try {
-            List<Announcement> announcements = announcementService.findActive();
+            Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createTime"));
+            Page<Announcement> announcements = announcementService.findActive(pageable);
             result.put("code", 200);
             result.put("message", "success");
             result.put("data", announcements);

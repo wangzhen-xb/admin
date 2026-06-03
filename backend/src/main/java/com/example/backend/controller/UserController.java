@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllUsers(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email) {
