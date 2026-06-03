@@ -20,7 +20,7 @@ const searchForm = ref({ roleName: '' })
 const form = ref({
   roleId: undefined as number | undefined,
   roleName: '' as string,
-  roleCode: '' as string,
+  roleKey: '' as string,
   sortNum: 0 as number,
   status: '0' as string,
   remark: '' as string
@@ -35,7 +35,7 @@ const formSchema: FormItem[] = [
     rules: [{ required: true, message: t('message.required', { field: t('page.roles.roleName') }), trigger: 'blur' }]
   },
   {
-    field: 'roleCode',
+    field: 'roleKey',
     label: t('page.roles.roleCode'),
     type: 'input',
     componentProps: { placeholder: t('page.roles.roleCode') },
@@ -65,7 +65,7 @@ const formSchema: FormItem[] = [
 const columns = computed<TableColumn<RoleInfo>[]>(() => [
   { title: t('common.number'), key: 'index', type: 'index', width: 60 },
   { title: t('page.roles.roleName'), key: 'roleName' },
-  { title: t('page.roles.roleCode'), key: 'roleCode' },
+  { title: t('page.roles.roleCode'), key: 'roleKey' },
   { title: t('common.sort'), key: 'sortNum', width: 80 },
   {
     title: t('common.status'),
@@ -111,7 +111,7 @@ const editRole = (role: RoleInfo) => {
   form.value = { 
     roleId: role.roleId,
     roleName: role.roleName,
-    roleCode: role.roleCode,
+    roleKey: role.roleKey,
     sortNum: role.sortNum,
     status: role.status,
     remark: role.remark
@@ -138,7 +138,7 @@ const submitForm = async () => {
       const updateData: RoleUpdateRequest = {
         roleId: form.value.roleId,
         roleName: form.value.roleName,
-        roleCode: form.value.roleCode,
+        roleKey: form.value.roleKey,
         sortNum: form.value.sortNum,
         status: form.value.status,
         remark: form.value.remark
@@ -147,7 +147,7 @@ const submitForm = async () => {
     } else {
       const createData: RoleCreateRequest = {
         roleName: form.value.roleName,
-        roleCode: form.value.roleCode,
+        roleKey: form.value.roleKey,
         sortNum: form.value.sortNum,
         status: form.value.status,
         remark: form.value.remark
@@ -156,7 +156,7 @@ const submitForm = async () => {
     }
     ElMessage.success(form.value.roleId ? t('message.updateSuccess') : t('message.addSuccess'))
     showAddDialog.value = false
-    form.value = { roleId: undefined, roleName: '', roleCode: '', sortNum: 0, status: '0', remark: '' }
+    form.value = { roleId: undefined, roleName: '', roleKey: '', sortNum: 0, status: '0', remark: '' }
     fetchRoles()
   } catch (error) {
     ElMessage.error(form.value.roleId ? t('message.updateFailed') : t('message.addFailed'))

@@ -137,7 +137,10 @@ public class AnnouncementController {
             Page<Announcement> announcements = announcementService.findActive(pageable);
             result.put("code", 200);
             result.put("message", "success");
-            result.put("data", announcements);
+            result.put("list", announcements.getContent());
+            result.put("total", announcements.getTotalElements());
+            result.put("page", announcements.getNumber());
+            result.put("size", announcements.getSize());
         } catch (Exception e) {
             result.put("code", 500);
             result.put("message", e.getMessage());

@@ -4,7 +4,7 @@ import type { ApiResponse } from '../types/api'
 export interface RoleInfo {
   roleId: number
   roleName: string
-  roleCode: string
+  roleKey: string
   sortNum: number
   status: string
   remark: string
@@ -13,7 +13,7 @@ export interface RoleInfo {
 
 export interface RoleCreateRequest {
   roleName: string
-  roleCode: string
+  roleKey: string
   sortNum?: number
   status?: string
   remark?: string
@@ -22,7 +22,7 @@ export interface RoleCreateRequest {
 export interface RoleUpdateRequest {
   roleId: number
   roleName?: string
-  roleCode?: string
+  roleKey?: string
   sortNum?: number
   status?: string
   remark?: string
