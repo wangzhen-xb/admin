@@ -37,7 +37,7 @@ public class UserController {
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email) {
         
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createTime"));
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createTime"));
         Page<User> userPage;
 
         if ((username != null && !username.isEmpty()) || (email != null && !email.isEmpty())) {

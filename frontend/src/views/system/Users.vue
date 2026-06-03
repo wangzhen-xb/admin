@@ -291,9 +291,9 @@ onMounted(async () => {
         <template #status="{ row }">
           <span
             class="px-2 py-1 rounded-full text-xs font-medium"
-            :class="row.status === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+            :class="row.status === '0' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
           >
-            {{ row.status === 1 ? t('common.enabled') : t('common.disabled') }}
+            {{ row.status === '0' ? t('common.enabled') : t('common.disabled') }}
           </span>
         </template>
         <template #action="{ row }">
